@@ -8,7 +8,6 @@
  * @link http://whsuite.com
  * @since  Version 1.0
  */
-
 (function($){
 
     var CI = $.cloneable = function(options) {
@@ -31,6 +30,7 @@
             item: '.clone-row',
             disabled_item: '.disabled-row',
             protect_value: '.protect-value',
+            protect_id: '.protect-id',
 
             add_button: '.add-item',
             delete_button: '.delete-item',
@@ -46,7 +46,6 @@
             name_int_ignore: 0, // the number of integers in the name to ignore before incrementing
 
             slide_speed: 'normal'
-
         },
 
         /**
@@ -100,21 +99,46 @@
                     // parse the id value
                     var old_id = $(this).attr('id');
 
-                    if (! CI.__isEmpty(old_id)) {
+                    if (! CI.__isEmpty(old_id) && ! $(this).hasClass(opts.protect_id.replace('.', ''))) {
 
-                        var new_id = CI.__parseInputId(new_name);
+                        var new_id = CI.__parseInputId(new_name, $(this).val());
                         if (new_id == old_id) {
 
                             new_id = new_id + '_' + Math.floor((Math.random() * 100) + 1);
                         }
 
+                        // if the input type is hidden, prefix with underscore
+                        if ($(this).attr('type') == 'hidden') {
+
+                            new_id = '_' + new_id;
+                        }
+
                         $(this).attr('id', new_id);
+
+                        // try to find the matching label and update the for attribute
+                        var inputLabel = $(this).parent().find('label[for="' + old_id + '"]');
+                        if (inputLabel.length > 0) {
+
+                            inputLabel.attr('for', new_id);
+                        }
                     }
 
                     // clear the value if it's not protected
                     if (! $(this).hasClass(opts.protect_value.replace('.', ''))) {
 
                         $(this).removeAttr('value');
+                    }
+
+                    // if it's checkbox / radio..uncheck
+                    if ($(this).attr('type') == 'checkbox' || $(this).attr('type') == 'radio') {
+
+                        $(this).removeAttr('checked');
+                    }
+
+                    // if it's select box, unselect option
+                    if ($(this).is('select')) {
+
+                        $(this).find('option:selected').removeAttr('selected');
                     }
 
                     // check if the original row had disabled elements
@@ -179,7 +203,7 @@
                 }
 
                 var _click = $(this);
-                var row_remove = _click.parent(opts.item);
+                var row_remove = _click.parents(opts.item);
 
                 // slide the row up to hide it
                 row_remove.slideUp(opts.slide_speed, function(e) {
@@ -254,9 +278,19 @@
          * the input name, we shall update it
          *
          */
-        __parseInputId: function(new_name) {
+        __parseInputId: function(new_name, item_val) {
 
-            new_id = new_name.replace(/\]\[/g, '')
+            new_id = new_name;
+
+            // add in the item value to any empty array elements so we can create
+            // unique IDs for each item
+            var emptyElement = new_name.match(/\[\]/g);
+            if (emptyElement !== null) {
+
+                new_id = new_id.replace(/\[\]/g, '[' + item_val + ']');
+            }
+
+            new_id = new_id.replace(/\]\[/g, '')
             .replace(/\[/g, '')
             .replace(/\]/g, '');
 
@@ -282,7 +316,5 @@
 
             return (!str || 0 === str.length);
         }
-
     });
-
 })(jQuery);
