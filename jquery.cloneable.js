@@ -203,7 +203,7 @@
                 }
 
                 var _click = $(this);
-                var row_remove = _click.parents(opts.item);
+                var row_remove = _click.closest(opts.item);
 
                 // slide the row up to hide it
                 row_remove.slideUp(opts.slide_speed, function(e) {
