@@ -20,7 +20,9 @@
 
     $.fn.cloneable = function(options) { // called as $('.foo').clone();
 
-        CI.init($(this), options);
+        $(this).each(function(i, e) {
+            CI.init($(this), options);
+        });
     };
 
     $.extend(CI, {
@@ -126,25 +128,25 @@
                     // clear the value if it's not protected
                     if (! $(this).hasClass(opts.protect_value.replace('.', ''))) {
 
-                        $(this).removeAttr('value');
+                        $(this).val('');
                     }
 
                     // if it's checkbox / radio..uncheck
                     if ($(this).attr('type') == 'checkbox' || $(this).attr('type') == 'radio') {
 
-                        $(this).removeAttr('checked');
+                        $(this).prop('checked', false);
                     }
 
                     // if it's select box, unselect option
                     if ($(this).is('select')) {
 
-                        $(this).find('option:selected').removeAttr('selected');
+                        $(this).find('option:selected').prop('selected', false);
                     }
 
                     // check if the original row had disabled elements
-                    if ($(this).attr('disabled') == 'disabled') {
+                    if ($(this).attr('disabled') == 'disabled' && $(this).closest(opts.item).is(new_option)) {
 
-                        $(this).removeAttr('disabled');
+                        $(this).prop('disabled', false);
                     }
                 });
 
@@ -156,7 +158,7 @@
                     new_option.removeClass(opts.disabled_item.replace('.', ''));
                 }
 
-				// run the pre new item callback
+                // run the pre new item callback
                 new_option = opts.pre_add_item_callback.call(container, new_option);
 
                 // everything should be in place, slide down
@@ -218,7 +220,7 @@
                     opts.delete_item_callback.call(container, row_remove);
 
                     // check if we want to actually remove from the dom or just disable
-                    if (container.find(opts.item).length > 1) {
+                    if (container.children(opts.item).length > 1) {
 
                         row_remove.remove();
 
@@ -258,15 +260,15 @@
 
                 if (CI.__isInt(name_split[i])) {
 
-                	// if this is an integer part of input name
-                	// check if we need to ignore any (used for sub cloneable bits)
-                	if (name_int_ignore == int_count) {
+                    // if this is an integer part of input name
+                    // check if we need to ignore any (used for sub cloneable bits)
+                    if (name_int_ignore == int_count) {
 
-		                    name_split[i]++;
-	                    break;
-	                }
+                            name_split[i]++;
+                        break;
+                    }
 
-	                int_count++;
+                    int_count++;
                 }
             }
 
@@ -316,5 +318,7 @@
 
             return (!str || 0 === str.length);
         }
+
     });
+
 })(jQuery);
