@@ -54,16 +54,19 @@
          * kick off the cloneable plugin!
          */
         init: function(container, options) {
+            if (! container.hasClass('cloneable-loaded')) {
+                // merge all the settings / options
+                var opts = $.extend({}, CI.defaults, options);
+                container.data('opts', opts);
 
-            // merge all the settings / options
-            var opts = $.extend({}, CI.defaults, options);
-            container.data('opts', opts);
+                // set the add button click event
+                CI._addButton(container);
 
-            // set the add button click event
-            CI._addButton(container);
+                // set the delete button click event
+                CI._deleteButton(container);
 
-            // set the delete button click event
-            CI._deleteButton(container);
+                container.addClass('cloneable-loaded');
+            }
         },
 
 
