@@ -1,0 +1,19 @@
+{
+  "name": "jquery-cloneable",
+  "version": "1.0.0",
+  "description": "Javascript / jQuery cloneable items plugin",
+  "main": "jquery.cloneable.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WHSuite/Cloneable.git"
+  },
+  "author": "Mike Barlow (https://github.com/mikebarlow)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WHSuite/Cloneable/issues"
+  },
+  "homepage": "https://github.com/WHSuite/Cloneable#readme"
+}
