@@ -3,6 +3,11 @@ Cloneable
 
 Javascript / jQuery cloneable items plugin
 
+## Install (either:)
+
+	yarn add jquery-cloneable
+	npm install --save jquery-cloneable
+
 ## HTML
 
 A simple example of a cloneable row would be:
